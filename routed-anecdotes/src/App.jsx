@@ -10,7 +10,10 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { Alert, Button, Form, Nav, Navbar, Table } from "react-bootstrap";
+import { Button, Form, Nav, Navbar, Table } from "react-bootstrap";
+import { Notification } from "./components/Components";
+import { useDispatch } from "react-redux";
+import { setNotification } from "./reducers/notificationsReducer";
 
 const Menu = () => {
   const padding = {
@@ -99,16 +102,16 @@ const About = () => (
   </div>
 );
 
-const Notification = ({ notification }) => {
-  if (notification === "") {
-    return null;
-  }
-  return (
-    <Alert variant="success" style={{ marginTop: "10px" }}>
-      {notification}
-    </Alert>
-  );
-};
+// const Notification = ({ notification }) => {
+//   if (notification === "") {
+//     return null;
+//   }
+//   return (
+//     <Alert variant="success" style={{ marginTop: "10px" }}>
+//       {notification}
+//     </Alert>
+//   );
+// };
 
 const Footer = () => (
   <div>
@@ -176,6 +179,7 @@ const CreateNew = (props) => {
 };
 
 const App = () => {
+  const dispatch = useDispatch();
   const [anecdotes, setAnecdotes] = useState([
     {
       content: "If it hurts, do it more often",
@@ -193,15 +197,10 @@ const App = () => {
     },
   ]);
 
-  const [notification, setNotification] = useState("");
-
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
-    setNotification(`a new anecdote ${anecdote.content} created!`);
-    setTimeout(() => {
-      setNotification("");
-    }, 5000);
+    dispatch(setNotification(`a new anecdote ${anecdote.content} created!`, 5));
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -222,7 +221,7 @@ const App = () => {
       <div className="container">
         <h1>Software anecdotes</h1>
         <Menu />
-        <Notification notification={notification} />
+        <Notification />
         <Routes>
           <Route
             path="/anecdotes/:id"
