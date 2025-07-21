@@ -11,7 +11,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { Button, Form, Nav, Navbar, Table } from "react-bootstrap";
-import { Notification } from "./components/Components";
+import { About, Footer, Notification } from "./components/Components";
 import { useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationsReducer";
 
@@ -79,50 +79,6 @@ const Anecdote = ({ anecdotes }) => {
     </div>
   );
 };
-
-const About = () => (
-  <div>
-    <h2>About anecdote app</h2>
-    <p>According to Wikipedia:</p>
-
-    <em>
-      An anecdote is a brief, revealing account of an individual person or an
-      incident. Occasionally humorous, anecdotes differ from jokes because their
-      primary purpose is not simply to provoke laughter but to reveal a truth
-      more general than the brief tale itself, such as to characterize a person
-      by delineating a specific quirk or trait, to communicate an abstract idea
-      about a person, place, or thing through the concrete details of a short
-      narrative. An anecdote is &quot;a story with a point.&quot;
-    </em>
-
-    <p>
-      Software engineering is full of excellent anecdotes, at this app you can
-      find the best and add more.
-    </p>
-  </div>
-);
-
-// const Notification = ({ notification }) => {
-//   if (notification === "") {
-//     return null;
-//   }
-//   return (
-//     <Alert variant="success" style={{ marginTop: "10px" }}>
-//       {notification}
-//     </Alert>
-//   );
-// };
-
-const Footer = () => (
-  <div>
-    Anecdote app for <a href="https://fullstackopen.com/">Full Stack Open</a>.
-    See{" "}
-    <a href="https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js">
-      https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js
-    </a>{" "}
-    for the source code.
-  </div>
-);
 
 const CreateNew = (props) => {
   const { reset: resetContent, ...content } = useField("text");
