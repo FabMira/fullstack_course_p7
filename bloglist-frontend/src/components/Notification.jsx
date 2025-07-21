@@ -1,13 +1,18 @@
-const Notification = ({ className, message }) => {
-  if (message === null) {
-    return null
+import { useSelector } from "react-redux";
+import { Alert } from "react-bootstrap";
+
+const Notification = () => {
+  const notification = useSelector((state) => state.notifications);
+
+  if (!notification) {
+    return null;
   }
 
   return (
-    <div className={className}>
-      {message}
-    </div>
-  )
-}
+    <Alert variant="success" className={notification.className}>
+      {notification.message}
+    </Alert>
+  );
+};
 
-export default Notification
+export default Notification;
