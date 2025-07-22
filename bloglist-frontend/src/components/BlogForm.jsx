@@ -1,65 +1,82 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { Button, Form, FloatingLabel } from "react-bootstrap";
 
 const BlogForm = ({ createBlog }) => {
-  const [formData, setFormData] = useState({ title: '', author: '', url: '' })
+  const [formData, setFormData] = useState({ title: "", author: "", url: "" });
 
   const addBlog = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     createBlog({
       title: formData.title,
       author: formData.author,
-      url: formData.url
-    })
-    setFormData({ title: '', author: '', url: '' })
-  }
+      url: formData.url,
+    });
+    setFormData({ title: "", author: "", url: "" });
+  };
 
   const handleBlogChange = (event) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   return (
     <div>
       <h2>Create a new Blog</h2>
 
-      <form onSubmit={addBlog}>
-        <div>
-          <label>Title:</label>
-          <input
-            data-testid='title'
-            name="title"
+      <Form onSubmit={addBlog}>
+        <FloatingLabel
+          controlId="floatingInput"
+          label="Title of the blog"
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            placeholder="Title"
             value={formData.title}
+            data-testid="title"
+            name="title"
             onChange={handleBlogChange}
-            placeholder='Title of the blog'
           />
-        </div>
-        <div>
-          <label>Author:</label>
-          <input
-            data-testid='author'
-            name="author"
+        </FloatingLabel>
+        <FloatingLabel
+          controlId="floatingInput"
+          label="Author of the blog"
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            placeholder="Author"
             value={formData.author}
+            data-testid="author"
+            name="author"
             onChange={handleBlogChange}
-            placeholder='Author of the blog'
           />
-        </div>
-        <div>
-          <label>Url:</label>
-          <input
-            data-testid='url'
-            name="url"
+        </FloatingLabel>
+        <FloatingLabel
+          controlId="floatingInput"
+          label="Url of the blog"
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            placeholder="Url"
             value={formData.url}
+            data-testid="url"
+            name="url"
             onChange={handleBlogChange}
-            placeholder='Url of the blog'
           />
-        </div>
-        <button type="submit">create</button>
-      </form>
+        </FloatingLabel>
+        <Form.Group className="mb-3">
+          <Button variant="primary" type="submit">
+            create
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
-  )
-}
+  );
+};
 
-export default BlogForm
+export default BlogForm;

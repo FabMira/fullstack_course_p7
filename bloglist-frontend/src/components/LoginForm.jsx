@@ -1,46 +1,57 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
+import { Button, Form, InputGroup } from "react-bootstrap";
 
 const LoginForm = ({
   handleSubmit,
   handleUsernameChange,
   handlePasswordChange,
   username,
-  password
+  password,
 }) => {
   return (
     <div>
       <h2>Login</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-                    username
-          <input
-            data-testid='username'
+      <Form onSubmit={handleSubmit}>
+        <InputGroup className="mb-3">
+          <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+          <Form.Control
+            placeholder="Username"
+            aria-label="Username"
+            aria-describedby="basic-addon1"
+            data-testid="username"
             value={username}
             onChange={handleUsernameChange}
           />
-        </div>
-        <div>
-                    password
-          <input
-            data-testid='password'
+        </InputGroup>
+        <InputGroup className="mb-3">
+          <InputGroup.Text id="basic-addon2">🔒</InputGroup.Text>
+          <Form.Control
             type="password"
+            placeholder="Password"
+            aria-label="Password"
+            aria-describedby="basic-addon2"
+            data-testid="password"
             value={password}
             onChange={handlePasswordChange}
           />
-        </div>
-        <button type="submit">login</button>
-      </form>
+        </InputGroup>
+        <Form.Group className="mb-3">
+          <Button variant="primary" type="submit">
+            login
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
-  )
-}
+  );
+};
 
 LoginForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleUsernameChange: PropTypes.func.isRequired,
   handlePasswordChange: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired
-}
+  password: PropTypes.string.isRequired,
+};
 
-export default LoginForm
+export default LoginForm;

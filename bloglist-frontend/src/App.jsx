@@ -9,6 +9,7 @@ import {
   setNotification,
 } from "./reducers/notificationsReducer";
 import { initializeBlogs, setBlogs } from "./reducers/blogsReducer";
+import { Button, Form } from "react-bootstrap";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -34,7 +35,7 @@ const App = () => {
       dispatch(
         setNotification(
           `User ${username} successfully logged in`,
-          "notification",
+          "success",
           5,
         ),
       );
@@ -42,12 +43,12 @@ const App = () => {
       setPassword("");
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
     } catch (error) {
-      dispatch(setNotification("Wrong credentials", "error", 5));
+      dispatch(setNotification("Wrong credentials", "danger", 5));
     }
   };
 
   useEffect(() => {
-    console.log("Initializing blogs...");
+    dispatch(clearNotification());
     dispatch(initializeBlogs());
   }, [dispatch]);
 
@@ -78,7 +79,11 @@ const App = () => {
     return (
       <div>
         <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
+          <Form.Group className="mb-3">
+            <Button variant="primary" onClick={() => setLoginVisible(true)}>
+              log in
+            </Button>
+          </Form.Group>
         </div>
         <div style={showWhenVisible}>
           <LoginForm
@@ -88,7 +93,9 @@ const App = () => {
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin}
           />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
+          <Button variant="secondary" onClick={() => setLoginVisible(false)}>
+            cancel
+          </Button>
         </div>
       </div>
     );
@@ -104,17 +111,17 @@ const App = () => {
       dispatch(
         setNotification(
           `a new blog ${req.title}, by ${req.author} added.`,
-          "notification",
+          "success",
           5,
         ),
       );
     } catch (error) {
-      dispatch(setNotification("Error saving new blog", "error", 5));
+      dispatch(setNotification("Error saving new blog", "danger", 5));
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Blogs</h1>
       <Notification />
       {!user && loginForm()}
