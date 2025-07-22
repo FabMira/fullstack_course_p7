@@ -1,51 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { Blog, BlogForm, LoginForm, Notification } from "./components";
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 import Toggable from "./components/Toggable";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearNotification,
   setNotification,
 } from "./reducers/notificationsReducer";
+import { loginUser, setUser } from "./reducers/userReducer";
 import { initializeBlogs, setBlogs } from "./reducers/blogsReducer";
 import { Button, Form } from "react-bootstrap";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
   const [loginVisible, setLoginVisible] = useState(false);
   const blogFormRef = useRef();
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    setLoginVisible(false);
-    // Handle login logic here
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-
-      blogService.setToken(user.token);
-      setUser(user);
-      dispatch(
-        setNotification(
-          `User ${username} successfully logged in`,
-          "success",
-          5,
-        ),
-      );
-      setUsername("");
-      setPassword("");
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-    } catch (error) {
-      dispatch(setNotification("Wrong credentials", "danger", 5));
-    }
-  };
+  const user = useSelector((state) => state.users.user);
 
   useEffect(() => {
     dispatch(clearNotification());
@@ -67,10 +40,16 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      // blogService.setToken(user.token)
+      dispatch(setUser(user));
+      blogService.setToken(user.token);
     }
-  }, []);
+  }, [dispatch]);
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setLoginVisible(false);
+    dispatch(loginUser({ username, password }));
+  };
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? "none" : "" };

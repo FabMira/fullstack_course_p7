@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Form, FloatingLabel } from "react-bootstrap";
+import PropTypes from "prop-types";
 
 const BlogForm = ({ createBlog }) => {
   const [formData, setFormData] = useState({ title: "", author: "", url: "" });
@@ -77,6 +78,10 @@ const BlogForm = ({ createBlog }) => {
       </Form>
     </div>
   );
+};
+
+BlogForm.propTypes = {
+  createBlog: PropTypes.func.isRequired,
 };
 
 export default BlogForm;
