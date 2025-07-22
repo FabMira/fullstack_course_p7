@@ -3,20 +3,21 @@ import { Blog, BlogForm, LoginForm, Notification } from "./components";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Toggable from "./components/Toggable";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   clearNotification,
   setNotification,
 } from "./reducers/notificationsReducer";
+import { initializeBlogs, setBlogs } from "./reducers/blogsReducer";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [loginVisible, setLoginVisible] = useState(false);
   const blogFormRef = useRef();
   const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -46,16 +47,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const blogs = await blogService.getAll();
-        setBlogs(blogs);
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-      }
-    };
-    fetchBlogs();
-  }, []);
+    console.log("Initializing blogs...");
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -104,7 +98,8 @@ const App = () => {
     dispatch(clearNotification());
     try {
       const req = await blogService.create(blogObject);
-      setBlogs(blogs.concat(req));
+      console.log("blogs updated:", blogs.concat(req));
+      dispatch(setBlogs(blogs.concat(req)));
       blogFormRef.current.toggleVisibility();
       dispatch(
         setNotification(
@@ -115,46 +110,6 @@ const App = () => {
       );
     } catch (error) {
       dispatch(setNotification("Error saving new blog", "error", 5));
-    }
-  };
-
-  const updateBlog = async (blog) => {
-    const blogToUpdate = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-    };
-    try {
-      await blogService.update(blogToUpdate, blog.id);
-      const blogs = await blogService.getAll();
-      setBlogs(blogs);
-    } catch (error) {
-      dispatch(
-        setNotification(`Error updating the blog ${blog.title}`, "error", 5),
-      );
-    }
-  };
-
-  const removeBlog = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      try {
-        await blogService.remove(blog);
-        const blogs = await blogService.getAll();
-        setBlogs(blogs);
-        dispatch(
-          setNotification(
-            `The blog ${blog.title}, was deleted.`,
-            "notification",
-            5,
-          ),
-        );
-      } catch (error) {
-        dispatch(
-          setNotification(`Error deleting the blog ${blog.title}`, "error", 5),
-        );
-      }
     }
   };
 
@@ -170,18 +125,7 @@ const App = () => {
           </Toggable>
         </div>
       )}
-
-      {blogs
-        .sort((blogA, blogB) => blogB.likes - blogA.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            handleSubmit={updateBlog}
-            handleRemove={removeBlog}
-            user={user}
-          />
-        ))}
+      <Blog />
     </div>
   );
 };
