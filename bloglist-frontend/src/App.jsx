@@ -6,6 +6,7 @@ import {
   Notification,
   Users,
   SingleUserView,
+  SingleBlogView,
 } from "./components";
 import blogService from "./services/blogs";
 import { useDispatch, useSelector } from "react-redux";
@@ -91,6 +92,7 @@ const AppContent = () => {
         />
         <Route path="/login" element={loginForm()} />
         <Route path="/users/:id" element={<SingleUserView />} />
+        <Route path="/blogs/:id" element={<SingleBlogView />} />
       </Routes>
     </div>
   );
