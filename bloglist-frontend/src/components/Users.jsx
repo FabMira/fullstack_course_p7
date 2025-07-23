@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { Button, Table } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../reducers/userReducer";
 
@@ -35,7 +35,14 @@ const Users = () => {
             <tbody>
               {users.map((u) => (
                 <tr key={u.id}>
-                  <td>{u.name}</td>
+                  <td>
+                    <Link
+                      style={{ textDecoration: "none" }}
+                      to={`/users/${u.id}`}
+                    >
+                      {u.name}
+                    </Link>
+                  </td>
                   <td>{u.blogs.length}</td>
                 </tr>
               ))}

@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Blog, LoginForm, Menu, Notification, Users } from "./components";
+import {
+  Blog,
+  LoginForm,
+  Menu,
+  Notification,
+  Users,
+  SingleUserView,
+} from "./components";
 import blogService from "./services/blogs";
 import { useDispatch, useSelector } from "react-redux";
 import { clearNotification } from "./reducers/notificationsReducer";
@@ -83,6 +90,7 @@ const AppContent = () => {
           element={user ? <Users /> : <Navigate replace to="/login" />}
         />
         <Route path="/login" element={loginForm()} />
+        <Route path="/users/:id" element={<SingleUserView />} />
       </Routes>
     </div>
   );

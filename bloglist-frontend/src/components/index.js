@@ -5,3 +5,4 @@ export { default as LoginForm } from "./LoginForm";
 export { default as Toggable } from "./Toggable";
 export { default as Menu } from "./Menu";
 export { default as Users } from "./Users";
+export { default as SingleUserView } from "./singleUserView";
