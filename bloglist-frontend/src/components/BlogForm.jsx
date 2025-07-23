@@ -29,7 +29,7 @@ const BlogForm = ({ createBlog }) => {
 
       <Form onSubmit={addBlog}>
         <FloatingLabel
-          controlId="floatingInput"
+          controlId="floatingInput_title"
           label="Title of the blog"
           className="mb-3"
         >
@@ -43,7 +43,7 @@ const BlogForm = ({ createBlog }) => {
           />
         </FloatingLabel>
         <FloatingLabel
-          controlId="floatingInput"
+          controlId="floatingInput_author"
           label="Author of the blog"
           className="mb-3"
         >
@@ -57,7 +57,7 @@ const BlogForm = ({ createBlog }) => {
           />
         </FloatingLabel>
         <FloatingLabel
-          controlId="floatingInput"
+          controlId="floatingInput_url"
           label="Url of the blog"
           className="mb-3"
         >

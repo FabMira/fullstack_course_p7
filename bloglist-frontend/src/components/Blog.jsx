@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNotification } from "../reducers/notificationsReducer";
+import {
+  clearNotification,
+  setNotification,
+} from "../reducers/notificationsReducer";
 import blogService from "../services/blogs";
 import { setBlogs } from "../reducers/blogsReducer";
 import { Button, ListGroup } from "react-bootstrap";
+import BlogForm from "./BlogForm";
+import Togglable from "./Toggable";
 
 const Blog = () => {
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.users.user);
+  const blogFormRef = useRef();
   const dispatch = useDispatch();
 
   const updateBlog = async (blog) => {
@@ -45,6 +52,25 @@ const Blog = () => {
     }
   };
 
+  const addBlog = async (blogObject) => {
+    dispatch(clearNotification());
+    try {
+      const req = await blogService.create(blogObject);
+      console.log("blogs updated:", blogs.concat(req));
+      dispatch(setBlogs(blogs.concat(req)));
+      blogFormRef.current.toggleVisibility();
+      dispatch(
+        setNotification(
+          `a new blog ${req.title}, by ${req.author} added.`,
+          "success",
+          5,
+        ),
+      );
+    } catch (error) {
+      dispatch(setNotification("Error saving new blog", "danger", 5));
+    }
+  };
+
   const [visibleBlogs, setVisibleBlogs] = useState(new Set());
 
   const toggleVisible = (id) => {
@@ -60,49 +86,56 @@ const Blog = () => {
   };
 
   return (
-    <ListGroup>
-      {[...blogs]
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => {
-          const isVisible = visibleBlogs.has(blog.id);
-          return (
-            <ListGroup.Item key={blog.id}>
-              {blog.title}
-              {". "}
-              <span style={{ fontWeight: "bold" }}>{blog.author}</span>
-              <div style={{ display: isVisible ? "none" : "" }}>
-                <Button
-                  variant="primary"
-                  onClick={() => toggleVisible(blog.id)}
-                >
-                  view
-                </Button>
-              </div>
-              <div style={{ display: isVisible ? "" : "none" }}>
-                <div>
+    <div>
+      {user && (
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <BlogForm createBlog={addBlog} />
+        </Togglable>
+      )}
+      <ListGroup style={{ paddingBottom: 20 }}>
+        {[...blogs]
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => {
+            const isVisible = visibleBlogs.has(blog.id);
+            return (
+              <ListGroup.Item key={blog.id}>
+                {blog.title}
+                {". "}
+                <span style={{ fontWeight: "bold" }}>{blog.author}</span>
+                <div style={{ display: isVisible ? "none" : "" }}>
                   <Button
-                    variant="secondary"
+                    variant="primary"
                     onClick={() => toggleVisible(blog.id)}
                   >
-                    hide
+                    view
                   </Button>
                 </div>
-                <p>{blog.url}</p>
-                <p>
-                  {blog.likes}{" "}
-                  <Button variant="success" onClick={() => updateBlog(blog)}>
-                    like
+                <div style={{ display: isVisible ? "" : "none" }}>
+                  <div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => toggleVisible(blog.id)}
+                    >
+                      hide
+                    </Button>
+                  </div>
+                  <p>{blog.url}</p>
+                  <p>
+                    {blog.likes}{" "}
+                    <Button variant="success" onClick={() => updateBlog(blog)}>
+                      like
+                    </Button>
+                  </p>
+                  <p>{blog.user?.name}</p>
+                  <Button variant="danger" onClick={() => removeBlog(blog)}>
+                    remove
                   </Button>
-                </p>
-                <p>{blog.user?.name}</p>
-                <Button variant="danger" onClick={() => removeBlog(blog)}>
-                  remove
-                </Button>
-              </div>
-            </ListGroup.Item>
-          );
-        })}
-    </ListGroup>
+                </div>
+              </ListGroup.Item>
+            );
+          })}
+      </ListGroup>
+    </div>
   );
 };
 

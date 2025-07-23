@@ -1,24 +1,24 @@
-import { useState, useEffect, useRef } from "react";
-import { Blog, BlogForm, LoginForm, Notification } from "./components";
+import { useState, useEffect } from "react";
+import { Blog, LoginForm, Menu, Notification, Users } from "./components";
 import blogService from "./services/blogs";
-import Toggable from "./components/Toggable";
 import { useDispatch, useSelector } from "react-redux";
+import { clearNotification } from "./reducers/notificationsReducer";
+import { getUsersList, loginUser, setUser } from "./reducers/userReducer";
+import { initializeBlogs } from "./reducers/blogsReducer";
 import {
-  clearNotification,
-  setNotification,
-} from "./reducers/notificationsReducer";
-import { loginUser, setUser } from "./reducers/userReducer";
-import { initializeBlogs, setBlogs } from "./reducers/blogsReducer";
-import { Button, Form } from "react-bootstrap";
+  BrowserRouter as Router,
+  Navigate,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 
-const App = () => {
+const AppContent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginVisible, setLoginVisible] = useState(false);
-  const blogFormRef = useRef();
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.users.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(clearNotification());
@@ -47,72 +47,51 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setLoginVisible(false);
-    dispatch(loginUser({ username, password }));
+    const result = await dispatch(loginUser({ username, password }));
+    if (result) {
+      setUsername("");
+      setPassword("");
+      dispatch(getUsersList());
+      navigate("/");
+    }
   };
 
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? "none" : "" };
-    const showWhenVisible = { display: loginVisible ? "" : "none" };
-
     return (
       <div>
-        <div style={hideWhenVisible}>
-          <Form.Group className="mb-3">
-            <Button variant="primary" onClick={() => setLoginVisible(true)}>
-              log in
-            </Button>
-          </Form.Group>
-        </div>
-        <div style={showWhenVisible}>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-          <Button variant="secondary" onClick={() => setLoginVisible(false)}>
-            cancel
-          </Button>
-        </div>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+        <br />
       </div>
     );
-  };
-
-  const addBlog = async (blogObject) => {
-    dispatch(clearNotification());
-    try {
-      const req = await blogService.create(blogObject);
-      console.log("blogs updated:", blogs.concat(req));
-      dispatch(setBlogs(blogs.concat(req)));
-      blogFormRef.current.toggleVisibility();
-      dispatch(
-        setNotification(
-          `a new blog ${req.title}, by ${req.author} added.`,
-          "success",
-          5,
-        ),
-      );
-    } catch (error) {
-      dispatch(setNotification("Error saving new blog", "danger", 5));
-    }
   };
 
   return (
     <div className="container">
       <h1>Blogs</h1>
       <Notification />
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <Toggable buttonLabel="New blog" ref={blogFormRef}>
-            <BlogForm createBlog={addBlog} />
-          </Toggable>
-        </div>
-      )}
-      <Blog />
+      <Menu />
+      <Routes>
+        <Route path="/" element={<Blog />} />
+        <Route
+          path="/users"
+          element={user ? <Users /> : <Navigate replace to="/login" />}
+        />
+        <Route path="/login" element={loginForm()} />
+      </Routes>
     </div>
+  );
+};
+const App = () => {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 };
 
