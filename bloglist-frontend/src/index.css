@@ -1,32 +1,113 @@
-/* h1 {
-    color: green;
-    font-style: italic;
-} */
-
-/* .notification {
-    color: green;
-    background: lightgray;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+body {
+  background-color: #181a1b;
+  color: #f1f3f4;
+  height: 100vh;
 }
 
-.error {
-    color: red;
-    background: lightgrey;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-} */
-
 .list-group-item {
-  background-color: var(--bs-light);
+  background-color: #23272b !important;
+  color: #f1f3f4 !important;
+  border-color: #343a40 !important;
 }
 
 .container {
-  background-color: var(--bs-gray-200);
+  background-color: #23272b !important;
+  color: #f1f3f4 !important;
+}
+
+.card,
+.card-body,
+.card-header,
+.card-footer {
+  background-color: #23272b !important;
+  color: #f1f3f4 !important;
+  border-color: #343a40 !important;
+}
+
+/* Botones con mayor contraste */
+.btn,
+.btn-primary {
+  background-color: #1976d2 !important;
+  color: #fff !important;
+  border-color: #1565c0 !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #1565c0 !important;
+  color: #fff !important;
+}
+.btn-secondary {
+  background-color: #424242 !important;
+  color: #fff !important;
+  border-color: #616161 !important;
+}
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: #616161 !important;
+  color: #fff !important;
+}
+.btn-danger {
+  background-color: #d32f2f !important;
+  color: #fff !important;
+  border-color: #b71c1c !important;
+}
+.btn-danger:hover,
+.btn-danger:focus {
+  background-color: #b71c1c !important;
+  color: #fff !important;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+.nav-item > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+*/ input,
+textarea,
+select {
+  background-color: #23272b !important;
+  color: #f1f3f4 !important;
+  border-color: #343a40 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #b0b8c1 !important;
+  opacity: 1 !important;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #b0b8c1 !important;
+}
+
+input::-ms-input-placeholder,
+textarea::-ms-input-placeholder {
+  color: #b0b8c1 !important;
+}
+
+hr {
+  border-color: #343a40;
+}
+
+a,
+a:visited {
+  color: #90caf9;
+}
+
+a:hover {
+  color: #42a5f5;
+}
+
+::-webkit-scrollbar {
+  background: #23272b;
+}
+::-webkit-scrollbar-thumb {
+  background: #343a40;
 }
