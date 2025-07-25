@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ListGroup } from "react-bootstrap";
 import { useDispatch } from "react-redux";
@@ -34,9 +34,17 @@ const SingleUserView = () => {
       <h4>Added blogs</h4>
       <ListGroup className="pb-3">
         {user.blogs && user.blogs.length > 0 ? (
-          user.blogs.map((blog) => (
-            <ListGroup.Item key={blog.id}>{blog.title}</ListGroup.Item>
-          ))
+          user.blogs.map((blog) => {
+            return (
+              <Link
+                to={`/blogs/${blog.id}`}
+                key={blog.id}
+                style={{ textDecoration: "none" }}
+              >
+                <ListGroup.Item key={blog.id}>{blog.title}</ListGroup.Item>
+              </Link>
+            );
+          })
         ) : (
           <ListGroup.Item>No blogs added.</ListGroup.Item>
         )}

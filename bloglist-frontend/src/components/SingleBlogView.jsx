@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Card } from "react-bootstrap";
+import { Card, ListGroup } from "react-bootstrap";
 import blogService from "../services/blogs";
 import { setBlogs } from "../reducers/blogsReducer";
 import { setNotification } from "../reducers/notificationsReducer";
@@ -48,13 +48,24 @@ const SingleBlogView = () => {
           <strong>URL:</strong> <a href={blog.url}>{blog.url}</a>
         </Card.Text>
         <Card.Text>
-          <strong>Likes:</strong> {blog.likes}{" "}
-          <Button onClick={() => updateBlog(blog)}>Like</Button>
+          <strong>Likes:</strong> {blog.likes}
+          <Button className="ms-3" onClick={() => updateBlog(blog)}>
+            Like
+          </Button>
         </Card.Text>
         <Card.Text>
           <strong>Added by:</strong> {blog.user?.name || "Unknown"}
         </Card.Text>
-        {/* You can add like/remove buttons here if needed */}
+        <strong>Comments:</strong>
+        <ListGroup className="mt-3">
+          {blog.comments && blog.comments.length > 0 ? (
+            blog.comments.map((comment, index) => (
+              <ListGroup.Item key={index}>{comment}</ListGroup.Item>
+            ))
+          ) : (
+            <ListGroup.Item>No comments yet.</ListGroup.Item>
+          )}
+        </ListGroup>
       </Card.Body>
     </Card>
   );
